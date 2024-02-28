@@ -30,6 +30,7 @@ class ArticleControllerTest {
         mvc.perform(get("/articles"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.TEXT_HTML))
+                .andExpect(view().name("articles/index"))
                 .andExpect(model().attributeExists("articles"));
 
     }
@@ -43,7 +44,9 @@ class ArticleControllerTest {
         mvc.perform(get("/articles/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.TEXT_HTML))
-                .andExpect(model().attributeExists("article"));
+                .andExpect(view().name("articles/index"))
+                .andExpect(model().attributeExists("article"))
+                .andExpect(model().attributeExists("articleComments"));
 
     }
 
@@ -56,7 +59,7 @@ class ArticleControllerTest {
         mvc.perform(get("/articles/search"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.TEXT_HTML))
-                .andExpect(model().attributeExists("article"));
+                .andExpect(model().attributeExists("articles/search"));
 
     }
 
@@ -69,7 +72,7 @@ class ArticleControllerTest {
         mvc.perform(get("/articles/search"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.TEXT_HTML))
-                .andExpect(model().attributeExists("article"));
+                .andExpect(model().attributeExists("article/search-hashtag"));
 
     }
 }

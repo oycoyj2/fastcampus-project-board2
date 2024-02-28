@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 @RequestMapping("/articles")
 @Controller
 public class ArticleController {
@@ -21,11 +20,12 @@ public class ArticleController {
         return "articles/index";
     }
 
-    @GetMapping("/{articleId}")
-    public String article(@PathVariable Long articleId, ModelMap map) {
-        map.addAttribute("article", "article");
+    @GetMapping("/1")
+    public String article(ModelMap map) {
+        map.addAttribute("article", "article"); // TODO: 구현할 때 여기에 실제 데이터를 넣어줘야 한다
         map.addAttribute("articleComments", List.of());
 
         return "articles/detail";
     }
+
 }

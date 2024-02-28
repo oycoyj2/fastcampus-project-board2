@@ -1,5 +1,6 @@
 package com.fastcampus.projectboard2.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RequestMapping("/articles")
 @Controller
 public class ArticleController {
@@ -20,7 +22,7 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}")
-    public String articles(@PathVariable Long articleId, ModelMap map) {
+    public String article(@PathVariable Long articleId, ModelMap map) {
         map.addAttribute("article", "article");
         map.addAttribute("articleComments", List.of());
 

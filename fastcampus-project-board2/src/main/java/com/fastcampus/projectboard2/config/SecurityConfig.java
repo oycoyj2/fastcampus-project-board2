@@ -18,10 +18,10 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(
                         authorize -> authorize
-                                .requestMatchers("/**").permitAll()
-                                .requestMatchers("/articles").permitAll()
-                                .anyRequest().authenticated()
+//                                .requestMatchers("/**").permitAll()
+                                .anyRequest().permitAll()
                 );
+
         return http.build();
     }
 }

@@ -12,6 +12,9 @@
 .idea/**/dictionaries
 .idea/**/shelf
 
+#JPA Buddy
+.jpb/
+
 #Querydsl
 /src/main/generated
 

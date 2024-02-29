@@ -80,4 +80,5 @@ class ArticleControllerTest {
                 .andExpect(model().attributeExists("article/search-hashtag"));
 
     }
+
 }

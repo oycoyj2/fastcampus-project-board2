@@ -2,6 +2,7 @@ package com.fastcampus.projectboard2.repository;
 
 import com.fastcampus.projectboard2.config.JpaConfig;
 import com.fastcampus.projectboard2.domian.Article;
+import com.fastcampus.projectboard2.domian.UserAccount;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ class JpaRepositoryTest {
 
     private final ArticleRepository articleRepository;
     private final ArticleCommentRepository articleCommentRepository;
+    @Autowired
+    private UserAccountRepository userAccountRepository;
 
     public JpaRepositoryTest(
             @Autowired ArticleRepository articleRepository,
@@ -49,14 +52,16 @@ class JpaRepositoryTest {
     @DisplayName("insert 테스트")
     @Test
     void givenTestData_whenInserting_thenWorksFine() {
-        //Given
+        // Given
         long previousCount = articleRepository.count();
+        UserAccount userAccount = userAccountRepository.save(UserAccount.of("uno", "pw", null, null, null));
+        Article article = Article.of(userAccount, "new article", "new content", "#spring");
 
-        //When
-        Article savedarticle = articleRepository.save(Article.of("new article", "new content", "#spring"));
-        //Then
-        assertThat(articleRepository.count()).isEqualTo(previousCount+1);
+        // When
+        articleRepository.save(article);
 
+        // Then
+        assertThat(articleRepository.count()).isEqualTo(previousCount + 1);
     }
 
     @DisplayName("update 테스트")

@@ -1,6 +1,7 @@
 package com.fastcampus.projectboard2.controller;
 
 import com.fastcampus.projectboard2.config.SecurityConfig;
+import com.fastcampus.projectboard2.domian.type.SearchType;
 import com.fastcampus.projectboard2.dto.ArticleWithCommentsDto;
 import com.fastcampus.projectboard2.dto.UserAccountDto;
 import com.fastcampus.projectboard2.service.ArticleService;
@@ -50,7 +51,7 @@ class ArticleControllerTest {
     @Test
     public void givenNothing_whenRequestingArticlesView_thenReturnsArticleView() throws Exception {
         //Given
-        given(articleService.searchArticles(null, eq(null), any(Pageable.class))).willReturn(Page.empty());
+        given(articleService.searchArticles(eq(null), eq(null), any(Pageable.class))).willReturn(Page.empty());
         given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(0, 1, 2, 3, 4));
 
         //When & Then
@@ -59,28 +60,35 @@ class ArticleControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
                 .andExpect(view().name("articles/index"))
                 .andExpect(model().attributeExists("articles"))
-                .andExpect(model().attributeExists("paginationBarNumbers"));
-        then(articleService).should().searchArticles(null, eq(null), ArgumentMatchers.any(Pageable.class));
+                .andExpect(model().attributeExists("searchTypes"));
+        then(articleService).should().searchArticles(eq(null), eq(null), any(Pageable.class));
         then(paginationService).should().getPaginationBarNumbers(anyInt(), anyInt());
     }
 
-
-    @DisplayName("[view][GET] 게시글 상세 페이지 - 정상 호출")
+    @DisplayName("[view][GET] 게시글 리스트 (게시판) 페이지 - 검색어와 함께 호출")
     @Test
-    public void givenNothing_whenRequestingArticleView_thenReturnsArticleView() throws Exception {
+    public void givenSearchKeyword_whenSearchingArticlesView_thenReturnsArticleView() throws Exception {
         //Given
-        Long articleId = 1L;
-        given(articleService.getArticle(articleId)).willReturn(createArticleWithCommentsDto());
+        SearchType searchType = SearchType.TITLE;
+        String searchValue = "title";
+        given(articleService.searchArticles(eq(searchType), eq(searchValue), any(Pageable.class))).willReturn(Page.empty());
+        given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(0, 1, 2, 3, 4));
 
         //When & Then
-        mvc.perform(get("/articles/1"))
+        mvc.perform(
+                get("/articles")
+                        .queryParam("searchType", searchType.name())
+                        .queryParam("searchValue", searchValue)
+        )
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-                .andExpect(view().name("articles/detail"))
-                .andExpect(model().attributeExists("article"))
-                .andExpect(model().attributeExists("articleComments"));
-        then(articleService).should().getArticle(articleId);
+                .andExpect(view().name("articles/index"))
+                .andExpect(model().attributeExists("articles"))
+                .andExpect(model().attributeExists("searchTypes"));
+        then(articleService).should().searchArticles(eq(searchType), eq(searchValue), any(Pageable.class));
+        then(paginationService).should().getPaginationBarNumbers(anyInt(), anyInt());
     }
+
 
     @DisplayName("[view][GET] 게시글 리스트 (게시판) 페이지 - 페이징, 정렬 기능")
     @Test
